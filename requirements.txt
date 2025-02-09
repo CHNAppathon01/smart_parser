@@ -1,0 +1,7 @@
+Flask #  latest
+Flask-CORS #  latest
+pandas#  latest
+Pillow # latest (PIL fork)
+asgiref # latest
+python-dotenv #  latest
+google-generativeai # latest

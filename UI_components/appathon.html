@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team 404</title>
+  <style>
+    header {
+      background-color: #01030f;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      padding-top: 60px;
+    }
+
+    .header-content {
+      text-align: center;
+      width: 100%;
+    }
+
+    h1 {
+      color: white;
+      font-size: 1.5em;
+    }
+
+    .logo {
+      max-height: 100%;
+      width: 10%;
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    main {
+      display: flex;
+      margin: 20px;
+    }
+
+    .left-content {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 5%;
+    }
+
+    .right-content {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 5%;
+    }
+
+    .dropzone {
+      width: 20%;
+      height: 30px;
+      margin: 20px 0;
+      border: 3px dashed #4e73df;
+      background-color: #f1f9fc;
+      color: #4e73df;
+      text-align: center;
+      position: relative;
+      padding: 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .dropzone p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .dropzone input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+
+    .read-button {
+      display: block;
+      width: 180px;
+      padding: 12px;
+      margin: 10px;
+      background-color: #4e73df;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .read-button:hover {
+      background-color: #2e59d9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+      display: none;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .target-file {
+      padding: 12px 20px;
+      font-size: 18px;
+      width: 30%;
+      font-weight: bold;
+      color:  #f7f5f5;
+      background-color: #020202;
+      border-radius: 0%;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .input-file {
+      padding: 12px 20px;
+      font-size: 18px;
+      width: 30%;
+      font-weight: bold;
+      color:  #f7f5f5;
+      background-color: #020202;
+      border-radius: 0%;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .response-container {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .response-container pre {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    /* Flex container to align buttons horizontally */
+    .button-container {
+      display: flex;
+      gap: 10px; /* Adds space between buttons */
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <img src="footer-logo.webp" alt="Indium Logo" class="logo">
+    <div class="header-content">
+      <h1>Team 404</h1>
+    </div>
+  </header>
+
+  <!-- Main Content Section -->
+  <main>
+    <!-- Left Content Section -->
+    <div class="left-content">
+      <p class="target-file">Target File</p>
+      <div class="dropzone" id="leftDropzone">
+        <p> Upload</p>
+        <input type="file" id="leftFileInput" multiple accept=".csv, .json, .jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
+      </div>
+      <div class="file-name" id="leftFileName"></div>
+    </div>
+
+    <!-- Right Content Section -->
+    <div class="right-content">
+      <p class="input-file">Input File</p>
+      <div class="dropzone" id="rightDropzone">
+        <p>Upload</p>
+        <input type="file" id="rightFileInput" multiple accept=".csv, .json, .jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
+      </div>
+      <div class="file-name" id="rightFileName"></div>
+      <div class="button-container">
+        <button class="read-button" id="mappedDataButton">
+          Get Mapped Data
+          <div class="loading-spinner" id="loadingSpinner"></div>
+        </button>
+        <button class="read-button" id="faultFinderButton">
+          Fault Finder
+          <div class="loading-spinner" id="faultFinderSpinner"></div>
+        </button>
+      </div>
+
+      <!-- Response Container (for right content API data) -->
+      <div class="response-container" id="responseContainer">
+        <h3>Mapped Data</h3>
+        <div id="responseTable"></div> <!-- Here the raw data will be displayed -->
+      </div>
+
+      <!-- Left Section for Fault Finder response -->
+      <div class="response-container" id="faultFinderResponseContainer">
+        <h3>Fault Finder Response</h3>
+        <div id="faultFinderResponseTable"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let standard_file = null;
+    let vendor_file = null;
+
+    // Left uploader functionality
+    const leftFileInput = document.getElementById('leftFileInput');
+    const leftFileNameDisplay = document.getElementById('leftFileName');
+
+    leftFileInput.addEventListener('change', (event) => {
+      const files = event.target.files;
+      if (files.length > 0) {
+        const file = files[0];
+        const validTypes = ['csv', 'json', 'png', 'jpg', 'jpeg', 'gif'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!validTypes.includes(fileExtension)) {
+          alert('Invalid file type. Please upload a CSV, JSON, or image file.');
+          return;
+        }
+
+        standard_file = file;
+        leftFileNameDisplay.textContent = file.name;
+      }
+    });
+
+    // Right uploader functionality
+    const rightFileInput = document.getElementById('rightFileInput');
+    const rightFileNameDisplay = document.getElementById('rightFileName');
+
+    rightFileInput.addEventListener('change', (event) => {
+      const files = event.target.files;
+      if (files.length > 0) {
+        const file = files[0];
+        const validTypes = ['csv', 'json', 'png', 'jpg', 'jpeg', 'gif'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!validTypes.includes(fileExtension)) {
+          alert('Invalid file type. Please upload a CSV, JSON, or image file.');
+          return;
+        }
+
+        vendor_file = file;
+        rightFileNameDisplay.textContent = file.name;
+      }
+    });
+
+    // Function to send both files to the Mapped Data API
+    function sendMappedDataToApi() {
+      if (!standard_file || !vendor_file) {
+        alert('Please upload both files first.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('standard_file', standard_file);
+      formData.append('vendor_file', vendor_file);
+
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      loadingSpinner.style.display = 'inline-block';
+
+      fetch('http://18.191.201.225:5000/map', { 
+        method: 'POST',
+        body: formData,
+        mode: "cors",
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        loadingSpinner.style.display = 'none';
+        renderApiResponseAsMappedData(data);
+      })
+      .catch(error => {
+        loadingSpinner.style.display = 'none';
+        alert('There was an error processing the files. Please try again.');
+      });
+    }
+
+    // Function to send vendor file to Fault Finder API
+    function sendFaultFinderToApi() {
+      if (!vendor_file) {
+        alert('Please upload the vendor file first.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('vendor_file', vendor_file);
+
+      const faultFinderSpinner = document.getElementById('faultFinderSpinner');
+      faultFinderSpinner.style.display = 'inline-block';
+
+      fetch('http://18.191.201.225:5000/api/upload-file', { 
+        method: 'POST',
+        body: formData,
+        mode: "cors",
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        faultFinderSpinner.style.display = 'none';
+        renderFaultFinderResponse(data);
+      })
+      .catch(error => {
+        faultFinderSpinner.style.display = 'none';
+        alert('There was an error with the Fault Finder. Please try again.');
+      });
+    }
+
+    // Function to render the mapped data with target columns
+    function renderApiResponseAsMappedData(data) {
+      const responseContainer = document.getElementById('responseContainer');
+      const responseTable = document.getElementById('responseTable');
+      
+      const targetColumns = ['column1', 'column2', 'column3']; // Replace with your target column names
+
+      responseContainer.style.display = 'block';
+      responseTable.innerHTML = '';
+
+      if (Array.isArray(data) && data.length > 0 && typeof data[0] === 'object') {
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+        
+        // Create header row based on target columns
+        targetColumns.forEach((col) => {
+          const th = document.createElement('th');
+          th.textContent = col;
+          th.style.border = '1px solid #ddd';
+          th.style.padding = '8px';
+          th.style.textAlign = 'left';
+          th.style.backgroundColor = '#f4f4f4';
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        // Create rows with only target columns
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          targetColumns.forEach((col) => {
+            const td = document.createElement('td');
+            td.textContent = item[col] || ''; // Display value for the column or empty if not present
+            td.style.border = '1px solid #ddd';
+            td.style.padding = '8px';
+            row.appendChild(td);
+          });
+          table.appendChild(row);
+        });
+
+        responseTable.appendChild(table);
+      } else {
+        const preformattedData = document.createElement('pre');
+        preformattedData.textContent = JSON.stringify(data, null, 2);
+        preformattedData.style.whiteSpace = 'pre-wrap';
+        preformattedData.style.wordWrap = 'break-word';
+        responseTable.appendChild(preformattedData);
+      }
+    }
+
+    // Function to render the Fault Finder response
+    function renderFaultFinderResponse(data) {
+      const faultFinderResponseContainer = document.getElementById('faultFinderResponseContainer');
+      const faultFinderResponseTable = document.getElementById('faultFinderResponseTable');
+      
+      faultFinderResponseContainer.style.display = 'block';
+      faultFinderResponseTable.innerHTML = '';
+
+      if (Array.isArray(data) && data.length > 0) {
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+
+        Object.keys(data[0]).forEach((key) => {
+          const th = document.createElement('th');
+          th.textContent = key;
+          th.style.border = '1px solid #ddd';
+          th.style.padding = '8px';
+          th.style.textAlign = 'left';
+          table.appendChild(th);
+        });
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          Object.values(item).forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value || '';
+            td.style.border = '1px solid #ddd';
+            td.style.padding = '8px';
+            row.appendChild(td);
+          });
+          table.appendChild(row);
+        });
+
+        faultFinderResponseTable.appendChild(table);
+      } else {
+        const preformattedData = document.createElement('pre');
+        preformattedData.textContent = JSON.stringify(data, null, 2);
+        preformattedData.style.whiteSpace = 'pre-wrap';
+        preformattedData.style.wordWrap = 'break-word';
+        faultFinderResponseTable.appendChild(preformattedData);
+      }
+    }
+
+    document.getElementById('mappedDataButton').addEventListener('click', sendMappedDataToApi);
+    document.getElementById('faultFinderButton').addEventListener('click', sendFaultFinderToApi);
+  </script>
+</body>
+</html>
